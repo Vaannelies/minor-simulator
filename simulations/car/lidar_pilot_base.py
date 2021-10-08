@@ -1,4 +1,4 @@
- '''
+'''
 ====== Legal notices
 
 Copyright (C) 2013 - 2021 GEATEC engineering
@@ -50,7 +50,7 @@ class LidarPilotBase:
 
     def input (self):   # Play nice in class hierarchy
         pass
-            
+        
     def sweep (self):   # Control algorithm to be tested
         self.nearestObstacleDistance = self.finity
         self.nearestObstacleAngle = 0
