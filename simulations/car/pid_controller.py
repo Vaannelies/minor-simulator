@@ -78,9 +78,13 @@ class PidController:
         self.yI += self.i * xError * deltaT
         
         # Differentiating term
-        yD = self.d * (xError - self.xErrorOld) / deltaT
-        self.xErrorOld = xError
+        if deltaT > 0:
+            yD = self.d * (xError - self.xErrorOld) / deltaT
+            self.xErrorOld = xError
         
-        # Summation
-        return yP + self.yI + yD
+            # Summation
+            return yP + self.yI + yD
+        
+        else:
+            return 0
     
