@@ -39,8 +39,8 @@ import visualisation as vs
 import zzz_alternatives.control as c
 
 sp.World (
-    lr.LidarPilotRealIo,            # Use LidarPilotRealIo for driving manually
-    # ls.LidarPilotSimulatedIo,     # Use LidarPilotSimulatedIo for driving automatically
+    lr.LidarPilotRealIo,
+    ls.LidarPilotSimulatedIo,
     ps.Physics,
     c.Control,
     vs.Visualisation
