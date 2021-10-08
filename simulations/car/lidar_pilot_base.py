@@ -38,8 +38,17 @@ class LidarPilotBase:
         self.steeringAngle = 0
         
         self.timer = tr.Timer ()
-        self.steeringPidController = pc.PidController (0.1, 0.1, 0.1)
-        #self.steeringPidController = pc.PidController (1.05, 0.05, 0.03)
+
+
+        # pc = pid_controller.py . PidController is the classname.
+        # An instance was created of class PidController.
+        # p = 1.05
+        # i = 0.05
+        # d = 0.03
+        # These values are needed to calculate the value in the method 'getY()'
+        
+        self.steeringPidController = pc.PidController (1.05, 0.05, 0.03)
+        
         
         while True:
             self.timer.tick ()
