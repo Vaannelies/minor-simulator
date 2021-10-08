@@ -33,11 +33,15 @@ ss.path.append (os.path.abspath ('../../..')) # If you want to store your simula
 import simpylc as sp
 
 import lidar_pilot_simulated_io as ls
+import lidar_pilot_real_io as lr
 import physics as ps
 import visualisation as vs
+import zzz_alternatives.control as c
 
 sp.World (
-    ls.LidarPilotSimulatedIo,
+    lr.LidarPilotRealIo,            # Use LidarPilotRealIo for driving manually
+    # ls.LidarPilotSimulatedIo,     # Use LidarPilotSimulatedIo for driving automatically
     ps.Physics,
+    c.Control,
     vs.Visualisation
 )
