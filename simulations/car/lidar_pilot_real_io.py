@@ -24,10 +24,12 @@ It is meant for training purposes only.
 
 Removing this header ends your license.
 '''
-
+import simpylc as sp
 import lidar_pilot_base as lb
+import zzz_alternatives.keyboard_pilot as kp
 
-class LidarPilotRealIo (lb.LidarPilotBase):
+class LidarPilotRealIo (kp.KeyboardPilot): 
+# class LidarPilotRealIo (lb.LidarPilotBase):
     def __init__ (self):
         super () .__init__ ()
         self.finity = 1_000_000_000        

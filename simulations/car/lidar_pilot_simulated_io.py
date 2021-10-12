@@ -36,18 +36,19 @@ class LidarPilotSimulatedIo (lb.LidarPilotBase):
         
     def input (self):   # Input from simulator
         super () .input ()
-        key = sp.getKey ()
-        
-        if key == 'KEY_UP':
-            self.driveEnabled = True
-        elif key == 'KEY_DOWN':
-            self.driveEnabled = False
-        
+        if sp.driveManually == False:
+            key = sp.getKey ()                
+            if key == 'KEY_UP':
+                self.driveEnabled = True
+            elif key == 'KEY_DOWN':
+                self.driveEnabled = False
+                
         self.lidarDistances = sp.world.visualisation.lidar.distances
         self.lidarHalfApertureAngle = sp.world.visualisation.lidar.halfApertureAngle
         
     def output (self):  # Output to simulator
         super () .output ()
-        sp.world.physics.steeringAngle.set (self.steeringAngle)
-        sp.world.physics.targetVelocity.set (self.targetVelocity)
+        if sp.driveManually == False:
+            sp.world.physics.steeringAngle.set (self.steeringAngle)
+            sp.world.physics.targetVelocity.set (self.targetVelocity)
         
