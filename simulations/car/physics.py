@@ -26,7 +26,6 @@ Removing this header ends your license.
 '''
 
 import simpylc as sp
-
 import parameters as pm
 
 class Physics (sp.Module):
@@ -37,6 +36,7 @@ class Physics (sp.Module):
         
         self.group ('wheels', True)
         
+        self.driveManually = sp.Register(0)
         self.acceleration = sp.Register (2)
         self.targetVelocity= sp.Register ()
         self.velocity = sp.Register ()
@@ -102,4 +102,10 @@ class Physics (sp.Module):
         
         self.focusX.set (self.positionX + self.focusDist * sp.cos (self.attitudeAngle))
         self.focusY.set (self.positionY + self.focusDist * sp.sin (self.attitudeAngle))
+             
+        if self.driveManually == 0:
+            sp.driveManually = False
+        else:
+            sp.driveManually = True
+
         
