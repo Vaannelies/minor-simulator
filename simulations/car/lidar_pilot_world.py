@@ -37,6 +37,24 @@ import lidar_pilot_real_io as lr
 import physics as ps
 import visualisation as vs
 import zzz_alternatives.control as c
+import pandas as pd
+from sklearn.neural_network import MLPRegressor
+import numpy as np
+
+
+df = pd.read_excel(r'D:\Annelies\Documenten\HR\JAAR 4\Minor\minor-simulator\data-test.xlsx');
+print(df);
+
+
+# X = np.array(df)
+# print('X =', X)
+
+# neural_net = MLPRegressor().fit(X[:, :-1], X[:,-1])
+# res = neural_net.predict([[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]])
+# print('result =', res)
+
+
+
 
 sp.World (
     lr.LidarPilotRealIo,
