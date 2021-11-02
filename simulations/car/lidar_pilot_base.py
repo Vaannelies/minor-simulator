@@ -33,6 +33,7 @@ import timer as tr
 import pid_controller as pc
 import xlsxwriter as xw
 from threading import Thread
+from random import randrange
 
 class LidarPilotBase:
 
@@ -41,7 +42,7 @@ class LidarPilotBase:
         self.driveEnabled = False
         self.steeringAngle = 0
         self.timer = tr.Timer ()
-        self.workbook = xw.Workbook('data.xlsx')
+        self.workbook = xw.Workbook('./data/data{}.xlsx'.format(randrange(10)))
         self.worksheet = self.workbook.add_worksheet()
 
         self.row = 0
