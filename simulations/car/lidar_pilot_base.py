@@ -24,7 +24,7 @@ It is meant for training purposes only.
 
 Removing this header ends your license.
 '''
-
+import os
 import time as tm
 import traceback as tb
 import math as mt
@@ -42,6 +42,7 @@ class LidarPilotBase:
         self.driveEnabled = False
         self.steeringAngle = 0
         self.timer = tr.Timer ()
+        if not os.path.isdir('./data'): os.mkdir('./data')
         self.workbook = xw.Workbook('./data/data{}.xlsx'.format(randrange(10)))
         self.worksheet = self.workbook.add_worksheet()
 
