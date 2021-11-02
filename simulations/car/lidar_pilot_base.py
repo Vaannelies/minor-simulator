@@ -68,15 +68,25 @@ class LidarPilotBase:
         if sp.driveManually == False:
             pass
         
+    def getObstacleDistances(self, lidarDistanceSections):
+        # If len(self.lidarDistances) == 120, lidarDistanceSections should be something like 6, 12, 24 etc.
+
+        # create empty result array (filled with zeroes)
+        result = [0 for i in range(lidarDistanceSections)]
+        sectionSize = len(self.lidarDistances)/lidarDistanceSections
+
+        for (index, lidarDistance) in enumerate(self.lidarDistances):
+            if index%sectionSize  == 0:
+                if lidarDistance > result[round((index - index%sectionSize) / sectionSize)]:
+                    result[round((index - index%sectionSize) / sectionSize)] = lidarDistance
+                    
+        return result       
+
     def sweep (self):   # Control algorithm to be tested
-        if(self.row == 0):
-            self.worksheet.write(self.row, self.col, 'nearestObstacleDistance')
-            self.worksheet.write(self.row, self.col + 1,'nearestObstacleAngle')
-            self.worksheet.write(self.row, self.col + 2, 'nextObstacleDistance')
-            self.worksheet.write(self.row, self.col + 3, 'nextObstacleAngle')
-            self.worksheet.write(self.row, self.col + 4, 'targetObstacleDistance')
-            self.worksheet.write(self.row, self.col + 5, 'targetObstacleAngle')
-            self.row += 1
+        obstacleDistancesAmount = 12
+        obstacleDistances = self.getObstacleDistances(obstacleDistancesAmount)
+        for (index, obstacleDistance) in enumerate(obstacleDistances):
+            self.worksheet.write(self.row, index, obstacleDistance)
 
         if sp.driveManually == False:
             self.nearestObstacleDistance = self.finity
@@ -95,32 +105,19 @@ class LidarPilotBase:
                     self.nearestObstacleDistance = lidarDistance 
                     self.nearestObstacleAngle = lidarAngle
 
-                    self.worksheet.write(self.row, self.col, self.nearestObstacleDistance)
-                    self.worksheet.write(self.row, self.col + 1, self.nearestObstacleAngle)
-                    self.worksheet.write(self.row, self.col + 2, self.nextObstacleDistance)
-                    self.worksheet.write(self.row, self.col + 3, self.nextObstacleAngle)
-
-                    self.row += 1
-
                 elif lidarDistance < self.nextObstacleDistance:
                     self.nextObstacleDistance = lidarDistance
                     self.nextObstacleAngle = lidarAngle
-
-                    self.worksheet.write(self.row, self.col, self.nearestObstacleDistance)
-                    self.worksheet.write(self.row, self.col + 1, self.nearestObstacleAngle)
-                    self.worksheet.write(self.row, self.col + 2, self.nextObstacleDistance)
-                    self.worksheet.write(self.row, self.col + 3, self.nextObstacleAngle)
-
-                    self.row += 1
             
             self.targetObstacleDistance = (self.nearestObstacleDistance + self.nextObstacleDistance) / 2
             self.targetObstacleAngle = (self.nearestObstacleAngle + self.nextObstacleAngle) / 2
 
-            self.worksheet.write(self.row, self.col + 4, self.targetObstacleDistance)
-            self.worksheet.write(self.row, self.col + 5, self.targetObstacleAngle)
-            
             self.steeringAngle = self.steeringPidController.getY (self.timer.deltaTime, self.targetObstacleAngle, 0)
             self.targetVelocity = ((90 - abs (self.steeringAngle)) / 60) if self.driveEnabled else 0
+
+            self.worksheet.write(self.row, obstacleDistancesAmount, self.steeringAngle)
+
+            self.row += 1
 
             
 
