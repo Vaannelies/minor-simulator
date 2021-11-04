@@ -39,12 +39,76 @@ import visualisation as vs
 import zzz_alternatives.control as c
 import pandas as pd
 from sklearn.neural_network import MLPRegressor
+from sklearn.datasets import make_regression
+from sklearn.model_selection import train_test_split
 import numpy as np
 
 
-df = pd.read_excel(r'D:\Annelies\Documenten\HR\JAAR 4\Minor\minor-simulator\data-test.xlsx');
-print(df);
+df = pd.read_excel('D:\Annelies\Documenten\HR\JAAR 4\Minor\minor-simulator\simulations\car\data\data1.xlsx');
+# print(df);
+data = df.to_numpy()
+print('data', data)
+# data = np.loadtxt('D:\Annelies\Documenten\HR\JAAR 4\Minor\minor-simulator\simulations\data\data.csv', delimiter=";")
+# data = np.loadtxt('D:\Annelies\Documenten\HR\JAAR 4\Minor\minor-simulator\simulations\car\data\data1.xlsx', delimiter=";")
+# data[:1]
 
+# print('data', data)
+
+
+# print("\n")
+# for row in data:
+#     result = ''
+#     for column in row:
+#         result += str(column) + "\t"
+#     print(result)
+#     print("\n")
+
+# print("\n")
+
+yColumn = [0 for item in data]      # output node values
+for index, row in enumerate(data): 
+    yColumn[index] += row[len(row)-1]
+# print('yColumn', yColumn)
+
+xColumns = []           # input nodes values
+for index, row in enumerate(data):
+    xColumns.append([])
+    items = []
+    for index, column in enumerate(row):
+        if index < len(row)-1:
+            items.append(column)
+    xColumns[len(xColumns)-1] = items
+
+
+x = xColumns
+y = yColumn 
+x_train, x_test, y_train, y_test = train_test_split(x, y, random_state = 1)
+regr = MLPRegressor(
+    hidden_layer_sizes=(64,64,64),
+    # activation="relu",
+    random_state = 1, 
+    max_iter = 500, 
+    ).fit(x_train, y_train)
+# regr.add(layers.Dense(10, activation='relu'))
+
+
+
+
+
+
+
+
+
+# print('xtest', x_test)
+# print('ytest', y_test)
+
+print()                     # wat betekent dit 
+print('predict', regr.predict(x_test)) # <-----
+print('score', regr.score(x_test, y_test))
+
+
+# print('The \'score\' is the coefficient of determination of the prediction. A.k.a. de \'determinatiecoëfficiënt\'.')
+# print('De determinatiecoëfficiënt is een heel ingewikkeld iets op wikipedia.')
 
 # X = np.array(df)
 # print('X =', X)
@@ -53,13 +117,10 @@ print(df);
 # res = neural_net.predict([[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]])
 # print('result =', res)
 
-
-
-
-sp.World (
-    lr.LidarPilotRealIo,
-    ls.LidarPilotSimulatedIo,
-    ps.Physics,
-    c.Control,
-    vs.Visualisation
-)
+# sp.World (
+#     lr.LidarPilotRealIo,
+#     ls.LidarPilotSimulatedIo,
+#     ps.Physics,
+#     c.Control,
+#     vs.Visualisation
+# )
