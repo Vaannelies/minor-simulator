@@ -44,7 +44,7 @@ from sklearn.model_selection import train_test_split
 import numpy as np
 
 
-df = pd.read_excel('D:\Annelies\Documenten\HR\JAAR 4\Minor\minor-simulator\simulations\car\data\data1.xlsx');
+df = pd.read_excel('D:\Annelies\Documenten\HR\JAAR 4\Minor\minor-simulator\simulations\car\data\data2.xlsx');
 # print(df);
 data = df.to_numpy()
 print('data', data)
@@ -95,15 +95,17 @@ regr = MLPRegressor(
 
 
 
-
-
+test_answers = regr.predict(x_test)
+for i in range(len(x_test)):
+    print('input nodes', x_test[i], 'predicted answer (output node)', test_answers[i], 'real answer', y_test[i])
+    print('\n')
 
 
 # print('xtest', x_test)
 # print('ytest', y_test)
 
 print()                     # wat betekent dit 
-print('predict', regr.predict(x_test)) # <-----
+# print('predict', regr.predict(x_test)) # <-----
 print('score', regr.score(x_test, y_test))
 
 
