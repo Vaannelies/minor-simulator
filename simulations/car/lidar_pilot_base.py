@@ -24,19 +24,30 @@ It is meant for training purposes only.
 
 Removing this header ends your license.
 '''
-
+import os
 import time as tm
 import traceback as tb
 import math as mt
 import simpylc as sp
 import timer as tr
 import pid_controller as pc
+import xlsxwriter as xw
+from threading import Thread
+from random import randrange
 
 class LidarPilotBase:
+
+
     def __init__ (self):
         self.driveEnabled = False
         self.steeringAngle = 0
         self.timer = tr.Timer ()
+        if not os.path.isdir('./data'): os.mkdir('./data')
+        self.workbook = xw.Workbook('./data/data{}.xlsx'.format(randrange(10)))
+        self.worksheet = self.workbook.add_worksheet()
+
+        self.row = 0
+        self.col = 0
 
 
         # pc = pid_controller.py . PidController is the classname.
@@ -59,7 +70,26 @@ class LidarPilotBase:
         if sp.driveManually == False:
             pass
         
+    def getObstacleDistances(self, lidarDistanceSections):
+        # If len(self.lidarDistances) == 120, lidarDistanceSections should be something like 6, 12, 24 etc.
+
+        # create empty result array (filled with zeroes)
+        result = [0 for i in range(lidarDistanceSections)]
+        sectionSize = len(self.lidarDistances)/lidarDistanceSections
+
+        for (index, lidarDistance) in enumerate(self.lidarDistances):
+            if index%sectionSize  == 0:
+                if lidarDistance > result[round((index - index%sectionSize) / sectionSize)]:
+                    result[round((index - index%sectionSize) / sectionSize)] = lidarDistance
+                    
+        return result       
+
     def sweep (self):   # Control algorithm to be tested
+        obstacleDistancesAmount = 12
+        obstacleDistances = self.getObstacleDistances(obstacleDistancesAmount)
+        for (index, obstacleDistance) in enumerate(obstacleDistances):
+            self.worksheet.write(self.row, index, obstacleDistance)
+
         if sp.driveManually == False:
             self.nearestObstacleDistance = self.finity
             self.nearestObstacleAngle = 0
@@ -83,10 +113,17 @@ class LidarPilotBase:
             
             self.targetObstacleDistance = (self.nearestObstacleDistance + self.nextObstacleDistance) / 2
             self.targetObstacleAngle = (self.nearestObstacleAngle + self.nextObstacleAngle) / 2
-            
+
             self.steeringAngle = self.steeringPidController.getY (self.timer.deltaTime, self.targetObstacleAngle, 0)
             self.targetVelocity = ((90 - abs (self.steeringAngle)) / 60) if self.driveEnabled else 0
+
+            self.worksheet.write(self.row, obstacleDistancesAmount, self.steeringAngle)
+
+            self.row += 1
+
+            
 
     def output (self):  # Play nice in class hierarchy
         if sp.driveManually == False:
             pass
+    
