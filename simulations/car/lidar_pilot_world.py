@@ -41,34 +41,24 @@ import pandas as pd
 from sklearn.neural_network import MLPRegressor
 from sklearn.datasets import make_regression
 from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.utils import shuffle
+
 import numpy as np
 
 
-df = pd.read_excel('D:\Annelies\Documenten\HR\JAAR 4\Minor\minor-simulator\simulations\car\data\data2.xlsx');
+df = pd.read_excel('D:\Annelies\Documenten\HR\JAAR 4\Minor\minor-simulator\simulations\car\data\data6.xlsx');
 # print(df);
-data = df.to_numpy()
+
+# Shuffle the dataset
+# https://scikit-learn.org/stable/modules/generated/sklearn.utils.shuffle.html
+data = shuffle(df.to_numpy())
 print('data', data)
-# data = np.loadtxt('D:\Annelies\Documenten\HR\JAAR 4\Minor\minor-simulator\simulations\data\data.csv', delimiter=";")
-# data = np.loadtxt('D:\Annelies\Documenten\HR\JAAR 4\Minor\minor-simulator\simulations\car\data\data1.xlsx', delimiter=";")
-# data[:1]
 
-# print('data', data)
-
-
-# print("\n")
-# for row in data:
-#     result = ''
-#     for column in row:
-#         result += str(column) + "\t"
-#     print(result)
-#     print("\n")
-
-# print("\n")
 
 yColumn = [0 for item in data]      # output node values
 for index, row in enumerate(data): 
     yColumn[index] += row[len(row)-1]
-# print('yColumn', yColumn)
 
 xColumns = []           # input nodes values
 for index, row in enumerate(data):
@@ -79,15 +69,22 @@ for index, row in enumerate(data):
             items.append(column)
     xColumns[len(xColumns)-1] = items
 
-
 x = xColumns
 y = yColumn 
 x_train, x_test, y_train, y_test = train_test_split(x, y, random_state = 1)
+
+# Use MinMaxScaler on x_train and x_test
+scaler = MinMaxScaler()
+scaler.fit(x_train,y_train)
+x_train = scaler.transform(x_train)
+x_test = scaler.transform(x_test)
+
 regr = MLPRegressor(
     hidden_layer_sizes=(64,64,64),
-    # activation="relu",
+    activation="logistic",
     random_state = 1, 
-    max_iter = 500, 
+    batch_size=64,
+    max_iter = 1500, 
     ).fit(x_train, y_train)
 # regr.add(layers.Dense(10, activation='relu'))
 
@@ -97,12 +94,10 @@ regr = MLPRegressor(
 
 test_answers = regr.predict(x_test)
 for i in range(len(x_test)):
-    print('input nodes', x_test[i], 'predicted answer (output node)', test_answers[i], 'real answer', y_test[i])
+    print('input nodes', x_test[i], 'predicted answer (output node)', '{:f}'.format(test_answers[i]), 'real answer', y_test[i])
     print('\n')
 
 
-# print('xtest', x_test)
-# print('ytest', y_test)
 
 print()                     # wat betekent dit 
 # print('predict', regr.predict(x_test)) # <-----
