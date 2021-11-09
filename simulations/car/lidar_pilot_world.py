@@ -100,7 +100,8 @@ for i in range(len(x_test)):
 
 
 print()                     # wat betekent dit 
-# print('predict', regr.predict(x_test)) # <-----
+            #                           v
+# print('predict', regr.predict(x_test[:2])) # <-----
 print('score', regr.score(x_test, y_test))
 
 
