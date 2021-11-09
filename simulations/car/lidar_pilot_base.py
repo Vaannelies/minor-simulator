@@ -34,6 +34,7 @@ import pid_controller as pc
 import xlsxwriter as xw
 from threading import Thread
 from random import randrange
+from datetime import datetime
 
 class LidarPilotBase:
 
@@ -118,6 +119,11 @@ class LidarPilotBase:
             self.targetVelocity = ((90 - abs (self.steeringAngle)) / 60) if self.driveEnabled else 0
 
             self.worksheet.write(self.row, obstacleDistancesAmount, self.steeringAngle)
+
+            ### Add timestamp to the excel file - for testing ###
+            # now = datetime.now()
+            # current_time = now.strftime("%H:%M:%S")
+            # self.worksheet.write(self.row, obstacleDistancesAmount + 1, current_time)
 
             self.row += 1
 
