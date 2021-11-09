@@ -35,7 +35,6 @@ class KeyboardPilot:
     def __init__ (self):
         print ('Use arrow keys to control speed and direction')
         self.steeringAngle = 0
-        self.lidarDistances = sp.world.visualisation.lidar.distances
         
         if not os.path.isdir('./data'): os.mkdir('./data')
         self.workbook = xw.Workbook('./data/data{}.xlsx'.format(randrange(10)))
@@ -80,6 +79,7 @@ class KeyboardPilot:
         self.steeringAngleStep = sp.world.control.steeringAngleStep
 
     def sweep (self):
+        self.lidarDistances = sp.world.visualisation.lidar.distances
         obstacleDistancesAmount = 12
         obstacleDistances = self.getObstacleDistances(obstacleDistancesAmount)
         for (index, obstacleDistance) in enumerate(obstacleDistances):
