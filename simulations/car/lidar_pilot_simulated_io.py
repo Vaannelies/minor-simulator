@@ -42,6 +42,7 @@ class LidarPilotSimulatedIo (lb.LidarPilotBase):
                 self.driveEnabled = True
             elif key == 'KEY_DOWN':
                 self.driveEnabled = False
+            elif key == '\x1b':
                 self.workbook.close()
                 
         self.lidarDistances = sp.world.visualisation.lidar.distances
