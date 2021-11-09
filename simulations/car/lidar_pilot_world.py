@@ -57,9 +57,9 @@ data = shuffle(df.to_numpy())
 print('data', data)
 
 # Remove duplicates from data
-print('Original data length:', len(data))
+print('Original excel data length:', len(data))
 filteredData =np.unique(data,axis=0)
-print ('Filtered data length (without duplicates): ', len(filteredData))
+print ('Filtered excel data length (without duplicates): ', len(filteredData))
 data = filteredData
 
 yColumn = [0 for item in data]      # output node values
@@ -80,10 +80,10 @@ y = yColumn
 x_train, x_test, y_train, y_test = train_test_split(x, y, random_state = 1)
 
 # Use MinMaxScaler on x_train and x_test
-scaler = MinMaxScaler()
-scaler.fit(x_train,y_train)
-x_train = scaler.transform(x_train)
-x_test = scaler.transform(x_test)
+# scaler = MinMaxScaler()
+# scaler.fit(x_train,y_train)
+# x_train = scaler.transform(x_train)
+# x_test = scaler.transform(x_test)
 
 regr = MLPRegressor(
     hidden_layer_sizes=(64,64,64),
@@ -98,18 +98,23 @@ regr = MLPRegressor(
 
 
 
+right_answers = 0
 test_answers = regr.predict(x_test)
 for i in range(len(x_test)):
     print('input nodes', x_test[i], 'predicted answer (output node)', '{:f}'.format(test_answers[i]), 'real answer', y_test[i])
+    if(y_test[i] - test_answers[i]) < 1 and (y_test[i] - test_answers[i]) > -2:
+        print('Right!')
+        print('Difference:', y_test[i] - test_answers[i])
     print('\n')
 
-
+    if(y_test[i] - test_answers[i]) < 1 and (y_test[i] - test_answers[i]) > -2:
+        right_answers += 1
 
 print()                     # wat betekent dit 
             #                           v
 # print('predict', regr.predict(x_test[:2])) # <-----
-print('score', regr.score(x_test, y_test))
-
+print('Score', regr.score(x_test, y_test))
+print('Total test data:', len(x_test), '\t',  'Right answers (difference less than 2):', right_answers)
 
 # print('The \'score\' is the coefficient of determination of the prediction. A.k.a. de \'determinatiecoëfficiënt\'.')
 # print('De determinatiecoëfficiënt is een heel ingewikkeld iets op wikipedia.')
