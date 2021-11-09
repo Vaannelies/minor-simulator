@@ -26,6 +26,7 @@ Removing this header ends your license.
 '''
 
 import os
+import glob as gl
 import sys as ss
 
 ss.path.append (os.path.abspath ('../../..')) # If you want to store your simulations somewhere else, put SimPyLC in your PYTHONPATH environment variable
@@ -43,11 +44,11 @@ from sklearn.datasets import make_regression
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.utils import shuffle
-
 import numpy as np
 
-
-df = pd.read_excel('D:\Annelies\Documenten\HR\JAAR 4\Minor\minor-simulator\simulations\car\data\data6.xlsx');
+list_of_files = gl.glob(r'.\data\*.xlsx') # * means all if need specific format then *.csv
+latest_file = max(list_of_files, key=os.path.getctime)
+df = pd.read_excel(latest_file)
 # print(df);
 
 # Shuffle the dataset
