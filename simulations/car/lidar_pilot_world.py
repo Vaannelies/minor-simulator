@@ -46,6 +46,15 @@ from sklearn.preprocessing import MinMaxScaler
 from sklearn.utils import shuffle
 import numpy as np
 
+sp.World (
+    lr.LidarPilotRealIo,
+    ls.LidarPilotSimulatedIo,
+    ps.Physics,
+    c.Control,
+    vs.Visualisation
+)
+
+
 list_of_files = gl.glob(r'.\data\*.xlsx') # * means all if need specific format then *.csv
 latest_file = max(list_of_files, key=os.path.getmtime)
 df = pd.read_excel(latest_file)
@@ -126,10 +135,3 @@ print('Total test data:', len(x_test), '\t',  'Right answers (difference less th
 # res = neural_net.predict([[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]])
 # print('result =', res)
 
-# sp.World (
-#     lr.LidarPilotRealIo,
-#     ls.LidarPilotSimulatedIo,
-#     ps.Physics,
-#     c.Control,
-#     vs.Visualisation
-# )
