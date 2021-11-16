@@ -105,6 +105,7 @@ regr = MLPRegressor(
     activation="logistic",
     random_state = 1, 
     max_iter = 2048, 
+    ).fit(x_train, y_train)
 # regr.add(layers.Dense(10, activation='relu'))
 
 
