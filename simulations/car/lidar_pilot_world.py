@@ -55,21 +55,25 @@ sp.World (
 )
 
 
-list_of_files = gl.glob(r'.\data\*.xlsx') # * means all if need specific format then *.csv
-latest_file = max(list_of_files, key=os.path.getmtime)
-df = pd.read_excel(latest_file)
-# print(df);
+# list_of_files = gl.glob(r'.\data\*.xlsx') # * means all if need specific format then *.csv
+# latest_file = max(list_of_files, key=os.path.getmtime)
+# df = pd.read_excel(latest_file)
+
+
+with open('.\data\samples.dat') as sampleFile:
+    data = np.array([[float (word) for word in line.split()] for line in sampleFile.readlines()])
+
 
 # Shuffle the dataset
 # https://scikit-learn.org/stable/modules/generated/sklearn.utils.shuffle.html
-data = shuffle(df.to_numpy())
+# data = shuffle(df.to_numpy())
 print('data', data)
 
 # Remove duplicates from data
-print('Original excel data length:', len(data))
-filteredData =np.unique(data,axis=0)
-print ('Filtered excel data length (without duplicates): ', len(filteredData))
-data = filteredData
+# print('Original excel data length:', len(data))
+# filteredData =np.unique(data,axis=0)
+# print ('Filtered excel data length (without duplicates): ', len(filteredData))
+# data = filteredData
 
 yColumn = [0 for item in data]      # output node values
 for index, row in enumerate(data): 
@@ -100,9 +104,7 @@ regr = MLPRegressor(
     hidden_layer_sizes=(64,64,64),
     activation="logistic",
     random_state = 1, 
-    batch_size=64,
-    max_iter = 1500, 
-    ).fit(x_train, y_train)
+    max_iter = 2048, 
 # regr.add(layers.Dense(10, activation='relu'))
 
 
