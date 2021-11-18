@@ -32,12 +32,13 @@ import simpylc as sp
 import timer as tr
 import pid_controller as pc
 import xlsxwriter as xw
+import joblib
 from threading import Thread
 from random import randrange
 from datetime import datetime
+from time import sleep
 
 class LidarPilotBase:
-
 
     def __init__ (self):
         self.driveEnabled = False
@@ -50,6 +51,7 @@ class LidarPilotBase:
         self.row = 0
         self.col = 0
 
+        self.trained_network = joblib.load('./data/trained_network.sav')
 
         # pc = pid_controller.py . PidController is the classname.
         # An instance was created of class PidController.
@@ -86,8 +88,9 @@ class LidarPilotBase:
         return result       
 
     def sweep (self):   # Control algorithm to be tested
-        obstacleDistancesAmount = 12
+        obstacleDistancesAmount = 16
         obstacleDistances = self.getObstacleDistances(obstacleDistancesAmount)
+        trained_network_steeringAngle = self.trained_network.predict([obstacleDistances])
         for (index, obstacleDistance) in enumerate(obstacleDistances):
             self.worksheet.write(self.row, index, obstacleDistance)
 
@@ -115,7 +118,8 @@ class LidarPilotBase:
             self.targetObstacleDistance = (self.nearestObstacleDistance + self.nextObstacleDistance) / 2
             self.targetObstacleAngle = (self.nearestObstacleAngle + self.nextObstacleAngle) / 2
 
-            self.steeringAngle = self.steeringPidController.getY (self.timer.deltaTime, self.targetObstacleAngle, 0)
+            # self.steeringAngle = self.steeringPidController.getY (self.timer.deltaTime, self.targetObstacleAngle, 0)
+            self.steeringAngle = trained_network_steeringAngle
             self.targetVelocity = ((90 - abs (self.steeringAngle)) / 60) if self.driveEnabled else 0
 
             self.worksheet.write(self.row, obstacleDistancesAmount, self.steeringAngle)
@@ -126,8 +130,6 @@ class LidarPilotBase:
             # self.worksheet.write(self.row, obstacleDistancesAmount + 1, current_time)
 
             self.row += 1
-
-            
 
     def output (self):  # Play nice in class hierarchy
         if sp.driveManually == False:
