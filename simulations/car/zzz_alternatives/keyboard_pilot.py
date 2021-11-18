@@ -37,8 +37,9 @@ class KeyboardPilot:
         self.steeringAngle = 0
         
         if not os.path.isdir('./data'): os.mkdir('./data')
-        self.workbook = xw.Workbook('./data/data{}.xlsx'.format(randrange(10)))
-        self.worksheet = self.workbook.add_worksheet()
+        self.samplefile = open('.\data\samples_2.dat', 'w')
+        # self.workbook = xw.Workbook('./data/data{}.xlsx'.format(randrange(10)))
+        # self.worksheet = self.workbook.add_worksheet()
 
         self.row = 0
         self.col = 0
@@ -73,7 +74,8 @@ class KeyboardPilot:
             self.downKey = key == 'KEY_DOWN'
 
             if key == '\x1b': # Escape key
-                self.workbook.close()
+                if self.samplefile.closed == False:
+                    self.samplefile.close()
 
         self.targetVelocityStep = sp.world.control.targetVelocityStep
         self.steeringAngleStep = sp.world.control.steeringAngleStep
@@ -82,8 +84,8 @@ class KeyboardPilot:
         self.lidarDistances = sp.world.visualisation.lidar.distances
         obstacleDistancesAmount = 12
         obstacleDistances = self.getObstacleDistances(obstacleDistancesAmount)
-        for (index, obstacleDistance) in enumerate(obstacleDistances):
-            self.worksheet.write(self.row, index, obstacleDistance)
+        # for (index, obstacleDistance) in enumerate(obstacleDistances):
+            # self.worksheet.write(self.row, index, obstacleDistance)
 
         if sp.driveManually == True:
             if self.leftKey:
@@ -96,10 +98,17 @@ class KeyboardPilot:
                 self.targetVelocityStep -= 1
             
             
-            self.worksheet.write(self.row, obstacleDistancesAmount, 10 * self.steeringAngleStep)
-            now = datetime.now()
-            current_time = now.strftime("%H:%M:%S")
-            self.worksheet.write(self.row, obstacleDistancesAmount + 1, current_time)
+            # self.worksheet.write(self.row, obstacleDistancesAmount, 10 * self.steeringAngleStep)
+            # now = datetime.now()
+            # current_time = now.strftime("%H:%M:%S")
+            # self.worksheet.write(self.row, obstacleDistancesAmount + 1, current_time)
+            if self.samplefile.closed == False:
+                for (index, obstacleDistance) in enumerate(obstacleDistances):
+                    self.samplefile.write(f'{round(obstacleDistance, 4)},')
+
+                self.samplefile.write(f'{round(10 * self.steeringAngleStep, 4)}')
+                self.samplefile.write('\n')
+
 
             self.row += 1
         

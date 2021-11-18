@@ -90,7 +90,6 @@ class LidarPilotBase:
     def sweep (self):   # Control algorithm to be tested
         obstacleDistancesAmount = 12
         obstacleDistances = self.getObstacleDistances(obstacleDistancesAmount)
-        print (obstacleDistances)
 
         if sp.driveManually == False:
             self.nearestObstacleDistance = self.finity
@@ -119,12 +118,12 @@ class LidarPilotBase:
             self.steeringAngle = self.steeringPidController.getY (self.timer.deltaTime, self.targetObstacleAngle, 0)
             self.targetVelocity = ((90 - abs (self.steeringAngle)) / 60) if self.driveEnabled else 0
 
-            for (index, obstacleDistance) in enumerate(obstacleDistances):
-                # print(obstacleDistance[index])
-                self.samplefile.write(f'{obstacleDistance} ')
+            if self.samplefile.closed == False:
+                for (index, obstacleDistance) in enumerate(obstacleDistances):
+                    self.samplefile.write(f'{round(obstacleDistance, 4)},')
 
-            self.samplefile.write(f'{self.steeringAngle}')
-            self.samplefile.write('\n')
+                self.samplefile.write(f'{round(self.steeringAngle, 4)}')
+                self.samplefile.write('\n')
 
 
             # self.samplefile.write(self.row, obstacleDistancesAmount, self.steeringAngle)

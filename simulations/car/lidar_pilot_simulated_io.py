@@ -30,7 +30,7 @@ import lidar_pilot_base as lb
 
 class LidarPilotSimulatedIo (lb.LidarPilotBase):
     def __init__ (self):
-        print ('Use up arrow to start, down arrow to stop')
+        print ('Use up arrow to start, down arrow to stop, escape to save data to .dat file')
         self.finity = sp.finity
         super () .__init__ ()
         
@@ -43,7 +43,9 @@ class LidarPilotSimulatedIo (lb.LidarPilotBase):
             elif key == 'KEY_DOWN':
                 self.driveEnabled = False
             elif key == '\x1b':
-                self.workbook.close()
+                if self.samplefile.closed == False:
+                    self.samplefile.close()
+                    print('Saved')
                 
         self.lidarDistances = sp.world.visualisation.lidar.distances
         self.lidarHalfApertureAngle = sp.world.visualisation.lidar.halfApertureAngle
