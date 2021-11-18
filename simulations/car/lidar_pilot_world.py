@@ -47,13 +47,13 @@ from sklearn.utils import shuffle
 import numpy as np
 
 
-sp.World (
-    lr.LidarPilotRealIo,
-    ls.LidarPilotSimulatedIo,
-    ps.Physics,
-    c.Control,
-    vs.Visualisation
-)
+# sp.World (
+#     lr.LidarPilotRealIo,
+#     ls.LidarPilotSimulatedIo,
+#     ps.Physics,
+#     c.Control,
+#     vs.Visualisation
+# )
 
 
 # list_of_files = gl.glob(r'.\data\*.xlsx') # * means all if need specific format then *.csv
@@ -61,7 +61,7 @@ sp.World (
 # df = pd.read_excel(latest_file)
 
 
-with open('.\data\samples.dat') as sampleFile:
+with open('.\data\samples_2.dat') as sampleFile:
     data = np.array([[float (word) for word in line.split()] for line in sampleFile.readlines()])
 
 
@@ -149,4 +149,3 @@ print()
 print('Score', regr.score(x_test, y_test))
 # print('Score', regr.score(scaled_x_test, scaled_y_test)) // with scale
 print('Total test data:', len(x_test), '\t',  'Right answers (difference less than 2):', right_answers)
-

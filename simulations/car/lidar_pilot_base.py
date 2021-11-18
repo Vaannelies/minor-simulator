@@ -121,7 +121,11 @@ class LidarPilotBase:
 
             for (index, obstacleDistance) in enumerate(obstacleDistances):
                 # print(obstacleDistance[index])
-                self.samplefile.write(f'{obstacleDistance}, {self.steeringAngle}')
+                self.samplefile.write(f'{obstacleDistance} ')
+
+            self.samplefile.write(f'{self.steeringAngle}')
+            self.samplefile.write('\n')
+
 
             # self.samplefile.write(self.row, obstacleDistancesAmount, self.steeringAngle)
             # self.samplefile.write()
