@@ -31,10 +31,11 @@ import math as mt
 import simpylc as sp
 import timer as tr
 import pid_controller as pc
-import xlsxwriter as xw
+# import xlsxwriter as xw
+import struct as struct
+import numpy as np
 from threading import Thread
 from random import randrange
-from datetime import datetime
 
 class LidarPilotBase:
 
@@ -44,8 +45,9 @@ class LidarPilotBase:
         self.steeringAngle = 0
         self.timer = tr.Timer ()
         if not os.path.isdir('./data'): os.mkdir('./data')
-        self.workbook = xw.Workbook('./data/data{}.xlsx'.format(randrange(10)))
-        self.worksheet = self.workbook.add_worksheet()
+        self.samplefile = open('.\data\samples_2.dat', 'w')
+        # self.workbook = xw.Workbook('./data/data{}.xlsx'.format(randrange(10)))
+        # self.worksheet = self.workbook.add_worksheet()
 
         self.row = 0
         self.col = 0
@@ -88,8 +90,7 @@ class LidarPilotBase:
     def sweep (self):   # Control algorithm to be tested
         obstacleDistancesAmount = 12
         obstacleDistances = self.getObstacleDistances(obstacleDistancesAmount)
-        for (index, obstacleDistance) in enumerate(obstacleDistances):
-            self.worksheet.write(self.row, index, obstacleDistance)
+        print (obstacleDistances)
 
         if sp.driveManually == False:
             self.nearestObstacleDistance = self.finity
@@ -118,13 +119,12 @@ class LidarPilotBase:
             self.steeringAngle = self.steeringPidController.getY (self.timer.deltaTime, self.targetObstacleAngle, 0)
             self.targetVelocity = ((90 - abs (self.steeringAngle)) / 60) if self.driveEnabled else 0
 
-            self.worksheet.write(self.row, obstacleDistancesAmount, self.steeringAngle)
+            for (index, obstacleDistance) in enumerate(obstacleDistances):
+                # print(obstacleDistance[index])
+                self.samplefile.write(f'{obstacleDistance}, {self.steeringAngle}')
 
-            ### Add timestamp to the excel file - for testing ###
-            # now = datetime.now()
-            # current_time = now.strftime("%H:%M:%S")
-            # self.worksheet.write(self.row, obstacleDistancesAmount + 1, current_time)
-
+            # self.samplefile.write(self.row, obstacleDistancesAmount, self.steeringAngle)
+            # self.samplefile.write()
             self.row += 1
 
             
