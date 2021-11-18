@@ -47,13 +47,13 @@ from sklearn.utils import shuffle
 import numpy as np
 
 
-# sp.World (
-#     lr.LidarPilotRealIo,
-#     ls.LidarPilotSimulatedIo,
-#     ps.Physics,
-#     c.Control,
-#     vs.Visualisation
-# )
+sp.World (
+    lr.LidarPilotRealIo,
+    ls.LidarPilotSimulatedIo,
+    ps.Physics,
+    c.Control,
+    vs.Visualisation
+)
 
 
 # list_of_files = gl.glob(r'.\data\*.xlsx') # * means all if need specific format then *.csv
@@ -135,8 +135,6 @@ test_answers = regr.predict(x_test).reshape(-1,1)
 print('test_answers', test_answers.shape)
 # test_answers = scalerY.inverse_transform(test_answers) // with scale
 
-# input('klaar om te printen')
-
 for i in range(len(x_test)):
     print('input nodes', x_test[i], 'predicted answer (output node)', list(map('{:.2f}'.format,test_answers[i])), 'real answer', y_test[i])
     if(y_test[i] - test_answers[i]) < 1 and (y_test[i] - test_answers[i]) > -2:
@@ -148,14 +146,6 @@ for i in range(len(x_test)):
         right_answers += 1
 
 print()                         
-                                # wat betekent dit 
-            #                           v
-# print('predict', regr.predict(x_test[:2])) # <-----
-#                               SLICE!!!!!
-
-
-
-
 print('Score', regr.score(x_test, y_test))
 # print('Score', regr.score(scaled_x_test, scaled_y_test)) // with scale
 print('Total test data:', len(x_test), '\t',  'Right answers (difference less than 2):', right_answers)
