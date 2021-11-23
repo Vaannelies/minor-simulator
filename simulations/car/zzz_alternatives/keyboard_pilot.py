@@ -74,6 +74,16 @@ class KeyboardPilot:
 
             if key == '\x1b': # Escape key
                 self.workbook.close()
+            elif key == 'h': #press h for Helicopter view
+                sp.world.visualisation.camera (position = sp.tEva ((0.0000001, 0, 20)),focus = sp.tEva ((0, 0, 0)))
+            elif key == 'f': #press f for First person view
+                sp.world.visualisation.camera (
+                    position = sp.tEva ((sp.world.physics.positionX, sp.world.physics.positionY, 1)), 
+                    focus = sp.tEva ((sp.world.physics.focusX, sp.world.physics.focusY, 0))
+                    )
+            elif key == 's': #press s for Soccer match view
+                sp.world.visualisation.camera (position = sp.tEva ((sp.world.physics.positionX + 2, sp.world.physics.positionY, 2)), 
+                focus = sp.tEva ((sp.world.physics.positionX + 0.001, sp.world.physics.positionY, 0)))
 
         self.targetVelocityStep = sp.world.control.targetVelocityStep
         self.steeringAngleStep = sp.world.control.steeringAngleStep
