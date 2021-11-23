@@ -27,19 +27,17 @@ Removing this header ends your license.
 
 import simpylc as sp
 import lidar_pilot_base as lb
-from pynput.keyboard import Controller
 
 class LidarPilotSimulatedIo (lb.LidarPilotBase):
     def __init__ (self):
         print ('Use up arrow to start, down arrow to stop')
         self.finity = sp.finity
-        self.keyboard = Controller()
         super () .__init__ ()
         
     def input (self):   # Input from simulator
         super () .input ()
-        key = sp.getKey ()
-        if sp.driveManually == False:                
+        if sp.driveManually == False:
+            key = sp.getKey ()                
             if key == 'KEY_UP':
                 self.driveEnabled = True
             elif key == 'KEY_DOWN':
@@ -51,11 +49,9 @@ class LidarPilotSimulatedIo (lb.LidarPilotBase):
             elif key == 'f': #press f for First person view 
                 sp.world.visualisation.camera (position = sp.tEva ((sp.world.physics.positionX, sp.world.physics.positionY, 1)), 
                 focus = sp.tEva ((sp.world.physics.focusX, sp.world.physics.focusY, 0)))
-                self.keyboard.press(key)
             elif key == 's': #press s for Soccer match view
                 sp.world.visualisation.camera (position = sp.tEva ((sp.world.physics.positionX + 2, sp.world.physics.positionY, 2)), 
                 focus = sp.tEva ((sp.world.physics.positionX + 0.001, sp.world.physics.positionY, 0)))
-                self.keyboard.press(key)
                 
         self.lidarDistances = sp.world.visualisation.lidar.distances
         self.lidarHalfApertureAngle = sp.world.visualisation.lidar.halfApertureAngle
