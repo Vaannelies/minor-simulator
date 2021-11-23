@@ -135,6 +135,12 @@ class Visualisation (sp.Scene):
         self.windowRear = Window (size = (0.05, 0.14, 0.18), center = (-0.18, 0, -0.025),angle = 72) 
 
         self.roadCones = []
+
+        self.letter = 's'
+        self.count = 0
+
+        self.file = f=open('test.txt', 'w')
+
         track = open ('default.track')
         
         for rowIndex, row in enumerate (track):
@@ -160,24 +166,23 @@ class Visualisation (sp.Scene):
             self.init = False
             sp.world.physics.positionX.set (self.startX) 
             sp.world.physics.positionY.set (self.startY)
-            
-            '''
+        
+        if self.letter == 'f':
             self.camera (   # First person
                 position = sp.tEva ((sp.world.physics.positionX, sp.world.physics.positionY, 1)),
                 focus = sp.tEva ((sp.world.physics.focusX, sp.world.physics.focusY, 0))
             )
-            '''
+        elif self.letter == 's':
             self.camera (   # Soccer match
                 position = sp.tEva ((sp.world.physics.positionX + 2, sp.world.physics.positionY, 2)),
                 focus = sp.tEva ((sp.world.physics.positionX + 0.001, sp.world.physics.positionY, 0))
             )
-            '''
+        elif self.letter == 'h':
             self.camera (   # Helicopter
                 position = sp.tEva ((0.0000001, 0, 20)),
                 focus = sp.tEva ((0, 0, 0))
             )
-            '''
-        
+           
         self.floor (parts = lambda:
             self.fuselage (position = (sp.world.physics.positionX, sp.world.physics.positionY, 0), rotation = sp.world.physics.attitudeAngle, parts = lambda:
                 self.cabin (parts = lambda:
@@ -217,3 +222,5 @@ class Visualisation (sp.Scene):
             pass
             # print ('Visualisation.display:', exception)
         
+    def setLetter(self, letter):
+        self.letter = letter
