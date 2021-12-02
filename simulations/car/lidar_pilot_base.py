@@ -88,7 +88,7 @@ class LidarPilotBase:
         return result       
 
     def sweep (self):   # Control algorithm to be tested
-        obstacleDistancesAmount = 12
+        obstacleDistancesAmount = 24
         obstacleDistances = self.getObstacleDistances(obstacleDistancesAmount)
 
         if sp.driveManually == False:

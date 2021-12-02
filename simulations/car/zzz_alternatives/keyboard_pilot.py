@@ -82,7 +82,7 @@ class KeyboardPilot:
 
     def sweep (self):
         self.lidarDistances = sp.world.visualisation.lidar.distances
-        obstacleDistancesAmount = 12
+        obstacleDistancesAmount = 24
         obstacleDistances = self.getObstacleDistances(obstacleDistancesAmount)
         # for (index, obstacleDistance) in enumerate(obstacleDistances):
             # self.worksheet.write(self.row, index, obstacleDistance)
