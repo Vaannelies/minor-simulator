@@ -60,9 +60,8 @@ import numpy as np
 # latest_file = max(list_of_files, key=os.path.getmtime)
 # df = pd.read_excel(latest_file)
 
-
 with open('.\data\samples_2.dat') as sampleFile:
-    data = np.array([[float (word) for word in line.split()] for line in sampleFile.readlines()])
+    data = np.array([[float (word) for word in line.split(',')] for line in sampleFile.readlines()])
 
 
 # Shuffle the dataset
@@ -120,7 +119,7 @@ scaled_y_test = scalerY.transform(y_test)
 # predictedY = scalerY.inverse_transform(predictedY)
 # Voordat je predict gaat gebruiken moet je die input data dus ook elke keer op dezelfde manier scalen. Anders krijgt ie bij predict()
 # hele andere input mee dan hij gewend is bij het trainen (waarbij je het wel gescaled hebt).
-print('2222')
+
 regr = MLPRegressor(
     hidden_layer_sizes=(64,64,64),
     activation="logistic",
@@ -146,6 +145,7 @@ for i in range(len(x_test)):
         right_answers += 1
 
 print()                         
-print('Score', regr.score(x_test, y_test))
+print('Score train', regr.score(x_train, y_train))
+print('Score test', regr.score(x_test, y_test))
 # print('Score', regr.score(scaled_x_test, scaled_y_test)) // with scale
 print('Total test data:', len(x_test), '\t',  'Right answers (difference less than 2):', right_answers)
