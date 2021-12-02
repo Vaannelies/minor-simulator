@@ -134,6 +134,7 @@ class Visualisation (sp.Scene):
         self.windowFront = Window (size = (0.05, 0.14, 0.14), center = (0.14, 0, -0.025), angle = -60)    
         self.windowRear = Window (size = (0.05, 0.14, 0.18), center = (-0.18, 0, -0.025),angle = 72) 
 
+        self.letter = 's'
         self.roadCones = []
         track = open ('default.track')
         
@@ -161,22 +162,21 @@ class Visualisation (sp.Scene):
             sp.world.physics.positionX.set (self.startX) 
             sp.world.physics.positionY.set (self.startY)
         
-        '''
-        self.camera (   # First person
-            position = sp.tEva ((sp.world.physics.positionX, sp.world.physics.positionY, 1)),
-            focus = sp.tEva ((sp.world.physics.focusX, sp.world.physics.focusY, 0))
-        )
-        '''
-        self.camera (   # Soccer match
-            position = sp.tEva ((sp.world.physics.positionX + 2, sp.world.physics.positionY, 2)),
-            focus = sp.tEva ((sp.world.physics.positionX + 0.001, sp.world.physics.positionY, 0))
-        )
-        '''
-        self.camera (   # Helicopter
-            position = sp.tEva ((0.0000001, 0, 20)),
-            focus = sp.tEva ((0, 0, 0))
-        )
-        '''
+        if self.letter == 'f':
+            self.camera (   # First person
+                position = sp.tEva ((sp.world.physics.positionX, sp.world.physics.positionY, 1)),
+                focus = sp.tEva ((sp.world.physics.focusX, sp.world.physics.focusY, 0))
+            )
+        elif self.letter == 's':
+            self.camera (   # Soccer match
+                position = sp.tEva ((sp.world.physics.positionX + 2, sp.world.physics.positionY, 2)),
+                focus = sp.tEva ((sp.world.physics.positionX + 0.001, sp.world.physics.positionY, 0))
+            )
+        elif self.letter == 'h':
+            self.camera (   # Helicopter
+                position = sp.tEva ((0.0000001, 0, 20)),
+                focus = sp.tEva ((0, 0, 0))
+            )
         
         self.floor (parts = lambda:
             self.fuselage (position = (sp.world.physics.positionX, sp.world.physics.positionY, 0), rotation = sp.world.physics.attitudeAngle, parts = lambda:
@@ -216,4 +216,7 @@ class Visualisation (sp.Scene):
         except Exception as exception: # Initial check
             pass
             # print ('Visualisation.display:', exception)
+
+    def setLetter(self, letter):
+        self.letter = letter
         

@@ -46,6 +46,12 @@ class LidarPilotSimulatedIo (lb.LidarPilotBase):
                 if self.samplefile.closed == False:
                     self.samplefile.close()
                     print('Saved')
+            elif key == 's':
+	            sp.world.visualisation.setLetter(key)
+            elif key == 'f':
+                sp.world.visualisation.setLetter(key)
+            elif key == 'h':
+                sp.world.visualisation.setLetter(key)
                 
         self.lidarDistances = sp.world.visualisation.lidar.distances
         self.lidarHalfApertureAngle = sp.world.visualisation.lidar.halfApertureAngle
