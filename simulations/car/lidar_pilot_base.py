@@ -94,8 +94,6 @@ class LidarPilotBase:
         obstacleDistancesAmount = 24
         obstacleDistances = self.getObstacleDistances(obstacleDistancesAmount)
         trained_network_steeringAngle = self.trained_network.predict([obstacleDistances])
-        for (index, obstacleDistance) in enumerate(obstacleDistances):
-            self.worksheet.write(self.row, index, obstacleDistance)
 
         if sp.driveManually == False:
             self.nearestObstacleDistance = self.finity
@@ -122,7 +120,7 @@ class LidarPilotBase:
             self.targetObstacleAngle = (self.nearestObstacleAngle + self.nextObstacleAngle) / 2
 
             # self.steeringAngle = self.steeringPidController.getY (self.timer.deltaTime, self.targetObstacleAngle, 0)
-            self.steeringAngle = trained_network_steeringAngle
+            self.steeringAngle = trained_network_steeringAngle[0]
             self.targetVelocity = ((90 - abs (self.steeringAngle)) / 60) if self.driveEnabled else 0
 
             if self.samplefile.closed == False:
