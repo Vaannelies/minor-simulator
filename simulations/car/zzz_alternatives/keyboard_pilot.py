@@ -76,6 +76,7 @@ class KeyboardPilot:
             if key == '\x1b': # Escape key
                 if self.samplefile.closed == False:
                     self.samplefile.close()
+                    print('Saved')
             elif key == 's':
 	            sp.world.visualisation.setLetter(key)
             elif key == 'f':
