@@ -55,7 +55,7 @@ class LidarPilotBase:
         self.row = 0
         self.col = 0
         
-        self.latest_trained_network = max(gl.glob(r'.\data\*.sav'), key=os.path.getmtime) 
+        self.latest_trained_network = max(gl.glob(r'.\data\*.sav'), key=os.path.getctime) 
         self.trained_network = joblib.load(self.latest_trained_network) 
         # self.trained_network = joblib.load('./data/trained_network_{score}.sav') 
 
