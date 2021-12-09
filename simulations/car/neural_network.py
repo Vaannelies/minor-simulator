@@ -26,7 +26,6 @@ Removing this header ends your license.
 '''
 
 import os
-import glob as gl
 import re
 import sys as ss
 
@@ -40,10 +39,6 @@ from sklearn.datasets import make_regression
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.utils import shuffle
-
-# list_of_files = gl.glob(r'.\data\*.xlsx') # * means all if need specific format then *.csv
-# latest_file = max(list_of_files, key=os.path.getmtime)
-# df = pd.read_excel(latest_file)
 
 
 with open('.\data\samples_2.dat') as sampleFile:
@@ -135,6 +130,6 @@ print('Score', regr.score(x_test, y_test))
 print('Total test data:', len(x_test), '\t',  'Right answers (difference less than 2):', right_answers)
 
 # Deze line uitcommenten als je de getrained model wilt opslaan in een aparte file
-joblib.dump(regr, './data/trained_network2.sav') 
+joblib.dump(regr, './data/trained_network_{}.sav'.format(round(regr.score(x_test, y_test),2))) 
 
 

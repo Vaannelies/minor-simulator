@@ -33,6 +33,7 @@ import timer as tr
 import pid_controller as pc
 import xlsxwriter as xw
 import joblib
+import glob as gl
 from threading import Thread
 from random import randrange
 from datetime import datetime
@@ -46,15 +47,17 @@ class LidarPilotBase:
         self.driveEnabled = False
         self.steeringAngle = 0
         self.timer = tr.Timer ()
-        if not os.path.isdir('./data'): os.mkdir('./data')
+        if not os.path.isdir('.\data'): os.mkdir('.\data')
         self.samplefile = open('.\data\samples_2.dat', 'w')
         # self.workbook = xw.Workbook('./data/data{}.xlsx'.format(randrange(10)))
         # self.worksheet = self.workbook.add_worksheet()
 
         self.row = 0
         self.col = 0
-
-        self.trained_network = joblib.load('./data/trained_network2.sav')
+        
+        self.latest_trained_network = max(gl.glob(r'.\data\*.sav'), key=os.path.getmtime) 
+        self.trained_network = joblib.load(self.latest_trained_network) 
+        # self.trained_network = joblib.load('./data/trained_network_{score}.sav') 
 
         # pc = pid_controller.py . PidController is the classname.
         # An instance was created of class PidController.
