@@ -37,6 +37,8 @@ from threading import Thread
 from random import randrange
 from datetime import datetime
 from time import sleep
+import struct as struct
+import numpy as np
 
 class LidarPilotBase:
 
@@ -45,13 +47,14 @@ class LidarPilotBase:
         self.steeringAngle = 0
         self.timer = tr.Timer ()
         if not os.path.isdir('./data'): os.mkdir('./data')
-        self.workbook = xw.Workbook('./data/data{}.xlsx'.format(randrange(10)))
-        self.worksheet = self.workbook.add_worksheet()
+        self.samplefile = open('.\data\samples_2.dat', 'w')
+        # self.workbook = xw.Workbook('./data/data{}.xlsx'.format(randrange(10)))
+        # self.worksheet = self.workbook.add_worksheet()
 
         self.row = 0
         self.col = 0
 
-        self.trained_network = joblib.load('./data/trained_network.sav')
+        self.trained_network = joblib.load('./data/trained_network2.sav')
 
         # pc = pid_controller.py . PidController is the classname.
         # An instance was created of class PidController.
@@ -88,11 +91,9 @@ class LidarPilotBase:
         return result       
 
     def sweep (self):   # Control algorithm to be tested
-        obstacleDistancesAmount = 16
+        obstacleDistancesAmount = 24
         obstacleDistances = self.getObstacleDistances(obstacleDistancesAmount)
         trained_network_steeringAngle = self.trained_network.predict([obstacleDistances])
-        for (index, obstacleDistance) in enumerate(obstacleDistances):
-            self.worksheet.write(self.row, index, obstacleDistance)
 
         if sp.driveManually == False:
             self.nearestObstacleDistance = self.finity
@@ -119,16 +120,19 @@ class LidarPilotBase:
             self.targetObstacleAngle = (self.nearestObstacleAngle + self.nextObstacleAngle) / 2
 
             # self.steeringAngle = self.steeringPidController.getY (self.timer.deltaTime, self.targetObstacleAngle, 0)
-            self.steeringAngle = trained_network_steeringAngle
+            self.steeringAngle = trained_network_steeringAngle[0]
             self.targetVelocity = ((90 - abs (self.steeringAngle)) / 60) if self.driveEnabled else 0
 
-            self.worksheet.write(self.row, obstacleDistancesAmount, self.steeringAngle)
+            if self.samplefile.closed == False:
+                for (index, obstacleDistance) in enumerate(obstacleDistances):
+                    self.samplefile.write(f'{round(obstacleDistance, 4)},')
 
-            ### Add timestamp to the excel file - for testing ###
-            # now = datetime.now()
-            # current_time = now.strftime("%H:%M:%S")
-            # self.worksheet.write(self.row, obstacleDistancesAmount + 1, current_time)
+                self.samplefile.write(f'{round(self.steeringAngle, 4)}')
+                self.samplefile.write('\n')
 
+
+            # self.samplefile.write(self.row, obstacleDistancesAmount, self.steeringAngle)
+            # self.samplefile.write()
             self.row += 1
 
     def output (self):  # Play nice in class hierarchy

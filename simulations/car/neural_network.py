@@ -46,8 +46,8 @@ from sklearn.utils import shuffle
 # df = pd.read_excel(latest_file)
 
 
-with open('.\data\samples.dat') as sampleFile:
-    data = np.array([[float (word) for word in line.split()] for line in sampleFile.readlines()])
+with open('.\data\samples_2.dat') as sampleFile:
+    data = np.array([[float (word) for word in line.split(',')] for line in sampleFile.readlines()])
 
 
 # Shuffle the dataset
@@ -104,7 +104,7 @@ scaled_y_test = scalerY.transform(y_test)
 # predictedY = scalerY.inverse_transform(predictedY)
 # Voordat je predict gaat gebruiken moet je die input data dus ook elke keer op dezelfde manier scalen. Anders krijgt ie bij predict()
 # hele andere input mee dan hij gewend is bij het trainen (waarbij je het wel gescaled hebt).
-print('2222')
+
 regr = MLPRegressor(
     hidden_layer_sizes=(64,64,64),
     activation="logistic",
@@ -135,4 +135,6 @@ print('Score', regr.score(x_test, y_test))
 print('Total test data:', len(x_test), '\t',  'Right answers (difference less than 2):', right_answers)
 
 # Deze line uitcommenten als je de getrained model wilt opslaan in een aparte file
-# joblib.dump(regr, './data/trained_network.sav') 
+joblib.dump(regr, './data/trained_network2.sav') 
+
+
