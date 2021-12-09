@@ -54,7 +54,7 @@ class LidarPilotBase:
         self.row = 0
         self.col = 0
 
-        self.trained_network = joblib.load('./data/trained_network.sav')
+        self.trained_network = joblib.load('./data/trained_network2.sav')
 
         # pc = pid_controller.py . PidController is the classname.
         # An instance was created of class PidController.

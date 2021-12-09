@@ -135,4 +135,6 @@ print('Score', regr.score(x_test, y_test))
 print('Total test data:', len(x_test), '\t',  'Right answers (difference less than 2):', right_answers)
 
 # Deze line uitcommenten als je de getrained model wilt opslaan in een aparte file
-# joblib.dump(regr, './data/trained_network.sav') 
+joblib.dump(regr, './data/trained_network2.sav') 
+
+
