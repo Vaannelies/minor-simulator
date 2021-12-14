@@ -55,9 +55,9 @@ class LidarPilotBase:
         self.row = 0
         self.col = 0
         
-        self.latest_trained_network = max(gl.glob(r'.\data\*.sav'), key=os.path.getctime) 
-        self.trained_network = joblib.load(self.latest_trained_network) 
-        # self.trained_network = joblib.load('./data/trained_network_{score}.sav') 
+        #self.latest_trained_network = max(gl.glob(r'.\data\*.sav'), key=os.path.getctime) 
+        #self.trained_network = joblib.load(self.latest_trained_network) 
+        self.trained_network = joblib.load(self.getHighestNeuralNetwork())
 
         # pc = pid_controller.py . PidController is the classname.
         # An instance was created of class PidController.
@@ -92,6 +92,19 @@ class LidarPilotBase:
                     result[round((index - index%sectionSize) / sectionSize)] = lidarDistance
                     
         return result       
+
+    def getHighestNeuralNetwork(self):
+        scores = []
+        files = gl.glob(r'.\data\trained_network_0.*')
+
+        for file in files:
+            head, tail = os.path.split(file)
+            scores.append(tail.split('_')[2].split('.sav')[0])
+
+        highestScore = max(scores)
+        highest_trained_network = r'.\data\trained_network_{}.sav'.format(highestScore)
+
+        return highest_trained_network
 
     def sweep (self):   # Control algorithm to be tested
         obstacleDistancesAmount = 24
