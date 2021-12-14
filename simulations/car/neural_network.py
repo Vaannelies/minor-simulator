@@ -50,13 +50,6 @@ with open('.\data\samples_2.dat') as sampleFile:
 # data = shuffle(df.to_numpy())
 print('data', data)
 
-
-# Remove duplicates from data
-# print('Original excel data length:', len(data))
-# filteredData =np.unique(data,axis=0)
-# print ('Filtered excel data length (without duplicates): ', len(filteredData))
-# data = filteredData
-
 yColumn = [0 for item in data]      # output node values
 for index, row in enumerate(data): 
     yColumn[index] += row[len(row)-1]

@@ -49,22 +49,11 @@ class LidarPilotBase:
         self.timer = tr.Timer ()
         if not os.path.isdir('.\data'): os.mkdir('.\data')
         self.samplefile = open('.\data\samples_2.dat', 'w')
-        # self.workbook = xw.Workbook('./data/data{}.xlsx'.format(randrange(10)))
-        # self.worksheet = self.workbook.add_worksheet()
 
         self.row = 0
         self.col = 0
         
-        #self.latest_trained_network = max(gl.glob(r'.\data\*.sav'), key=os.path.getctime) 
-        #self.trained_network = joblib.load(self.latest_trained_network) 
         self.trained_network = joblib.load(self.getHighestNeuralNetwork())
-
-        # pc = pid_controller.py . PidController is the classname.
-        # An instance was created of class PidController.
-        # p = 1.05
-        # i = 0.05
-        # d = 0.03
-        # These values are needed to calculate the value in the method 'getY()'
         
         self.steeringPidController = pc.PidController (1.05, 0.05, 0.03)
 
@@ -146,9 +135,6 @@ class LidarPilotBase:
                 self.samplefile.write(f'{round(self.steeringAngle, 4)}')
                 self.samplefile.write('\n')
 
-
-            # self.samplefile.write(self.row, obstacleDistancesAmount, self.steeringAngle)
-            # self.samplefile.write()
             self.row += 1
 
     def output (self):  # Play nice in class hierarchy

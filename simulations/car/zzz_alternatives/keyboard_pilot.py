@@ -38,8 +38,6 @@ class KeyboardPilot:
         
         if not os.path.isdir('./data'): os.mkdir('./data')
         self.samplefile = open('.\data\samples_2.dat', 'w')
-        # self.workbook = xw.Workbook('./data/data{}.xlsx'.format(randrange(10)))
-        # self.worksheet = self.workbook.add_worksheet()
 
         self.row = 0
         self.col = 0
@@ -91,8 +89,6 @@ class KeyboardPilot:
         self.lidarDistances = sp.world.visualisation.lidar.distances
         obstacleDistancesAmount = 24
         obstacleDistances = self.getObstacleDistances(obstacleDistancesAmount)
-        # for (index, obstacleDistance) in enumerate(obstacleDistances):
-            # self.worksheet.write(self.row, index, obstacleDistance)
 
         if sp.driveManually == True:
             if self.leftKey:
@@ -104,18 +100,12 @@ class KeyboardPilot:
             elif self.downKey:
                 self.targetVelocityStep -= 1
             
-            
-            # self.worksheet.write(self.row, obstacleDistancesAmount, 10 * self.steeringAngleStep)
-            # now = datetime.now()
-            # current_time = now.strftime("%H:%M:%S")
-            # self.worksheet.write(self.row, obstacleDistancesAmount + 1, current_time)
             if self.samplefile.closed == False:
                 for (index, obstacleDistance) in enumerate(obstacleDistances):
                     self.samplefile.write(f'{round(obstacleDistance, 4)},')
 
                 self.samplefile.write(f'{round(10 * self.steeringAngleStep, 4)}')
                 self.samplefile.write('\n')
-
 
             self.row += 1
         
