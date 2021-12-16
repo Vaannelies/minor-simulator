@@ -87,7 +87,7 @@ class KeyboardPilot:
 
     def sweep (self):
         self.lidarDistances = sp.world.visualisation.lidar.distances
-        obstacleDistancesAmount = 24
+        obstacleDistancesAmount = 3
         obstacleDistances = self.getObstacleDistances(obstacleDistancesAmount)
 
         if sp.driveManually == True:
