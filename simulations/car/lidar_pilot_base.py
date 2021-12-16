@@ -91,12 +91,13 @@ class LidarPilotBase:
             scores.append(tail.split('_')[2].split('.sav')[0])
 
         highestScore = max(scores)
-        highest_trained_network = r'.\data\trained_network_{}.sav'.format(highestScore)
+        highest_trained_network = r'.\data\trained_network_0.19.sav'
+        # highest_trained_network = r'.\data\trained_network_{}.sav'.format(highestScore)
 
         return highest_trained_network
 
     def sweep (self):   # Control algorithm to be tested
-        obstacleDistancesAmount = 24
+        obstacleDistancesAmount = 3
         obstacleDistances = self.getObstacleDistances(obstacleDistancesAmount)
         trained_network_steeringAngle = self.trained_network.predict([obstacleDistances])
 
@@ -130,6 +131,8 @@ class LidarPilotBase:
 
             if self.samplefile.closed == False:
                 for (index, obstacleDistance) in enumerate(obstacleDistances):
+                    if obstacleDistance > 20:
+                        obstacleDistance = 20
                     self.samplefile.write(f'{round(obstacleDistance, 4)},')
 
                 self.samplefile.write(f'{round(self.steeringAngle, 4)}')
