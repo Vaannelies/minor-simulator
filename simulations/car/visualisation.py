@@ -136,7 +136,7 @@ class Visualisation (sp.Scene):
 
         self.letter = 's'
         self.roadCones = []
-        track = open ('default.track')
+        track = open ('sonar.track')
         
         for rowIndex, row in enumerate (track):
             for columnIndex, column in enumerate (row):
