@@ -102,6 +102,8 @@ class KeyboardPilot:
             
             if self.samplefile.closed == False:
                 for (index, obstacleDistance) in enumerate(obstacleDistances):
+                    if obstacleDistance > 20:
+                        obstacleDistance = 20
                     self.samplefile.write(f'{round(obstacleDistance, 4)},')
 
                 self.samplefile.write(f'{round(10 * self.steeringAngleStep, 4)}')
