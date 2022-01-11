@@ -58,23 +58,30 @@ class Scanner:
 
     def scan (self, mountPosition, mountAngle):
         self.lidarDistances = [sp.finity for angle in range (self.apertureAngle)]
-        
+
+        # Set every sonarDistance section to infinite
+        self.sonarDistances[-1] = 1e+20
+        self.sonarDistances[0] = 1e+20
+        self.sonarDistances[1] = 1e+20
+
         for obstacle in self.obstacles:
+            # For every roadCone, get the angle and distance relative to the car
+            # and check whether it's in the left, middle or right sonar sector.
+            # Assign the smallest distance to the sonarDistances[sectorIndex]
+
             relativePosition = sp.tSub (obstacle.center, mountPosition) 
             distance = sp.tNor (relativePosition)
             absoluteAngle = sp.atan2 (relativePosition [1], relativePosition [0])
             relativeAngle = (round (absoluteAngle - mountAngle) + 180) % 360 - 180 
-                
+           
             if -self.halfApertureAngle <= relativeAngle < self.halfApertureAngle - 1:
                 self.lidarDistances [relativeAngle] = round (min (distance, self.lidarDistances [relativeAngle]), 4)    # In case of coincidence, favor nearby obstacle
-
                 if relativeAngle < -self.halfMiddleApertureAngle:
                     sectorIndex = -1
                 elif relativeAngle < self.halfMiddleApertureAngle:
                     sectorIndex = 0
                 else:
                     sectorIndex = 1
-
                 self.sonarDistances [sectorIndex] = round (min (distance, self.sonarDistances [sectorIndex]), 4)
 
 class Line (sp.Cylinder):
@@ -147,7 +154,7 @@ class Visualisation (sp.Scene):
 
         self.letter = 's'
         self.roadCones = []
-        track = open ('default.track')
+        track = open ('sonar.track')
         
         for rowIndex, row in enumerate (track):
             for columnIndex, column in enumerate (row):
