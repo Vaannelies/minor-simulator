@@ -228,10 +228,6 @@ class Visualisation (sp.Scene):
         except Exception as exception: # Initial check
             pass
             # print ('Visualisation.display:', exception)
-<<<<<<< Updated upstream
-        
-=======
 
     def setLetter(self, letter):
         self.letter = letter
->>>>>>> Stashed changes
