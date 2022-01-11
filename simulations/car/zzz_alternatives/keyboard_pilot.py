@@ -24,13 +24,23 @@
 # Removing this header ends your licence.
 #
 
+import os
 import time as tm
-
+import xlsxwriter as xw
+from random import randrange
+from datetime import datetime
 import simpylc as sp
 
 class KeyboardPilot:
     def __init__ (self):
         print ('Use arrow keys to control speed and direction')
+        self.steeringAngle = 0
+        
+        if not os.path.isdir('./data'): os.mkdir('./data')
+        self.samplefile = open('.\data\samples_2.dat', 'w')
+
+        self.row = 0
+        self.col = 0
 
         while True:
             self.input ()
@@ -44,6 +54,16 @@ class KeyboardPilot:
         # create empty result array (filled with zeroes)
         result = [1e20 for i in range(lidarDistanceSections)]
         sectionSize = int(len(self.sonarDistances)/lidarDistanceSections)
+        
+        # result = [0 for i in range(lidarDistanceSections)]
+        # sectionSize = len(self.lidarDistances)/lidarDistanceSections
+
+        # for (index, lidarDistance) in enumerate(self.lidarDistances):
+        #     if index%sectionSize  == 0:
+        #         if lidarDistance > result[round((index - index%sectionSize) / sectionSize)]:
+        #             result[round((index - index%sectionSize) / sectionSize)] = lidarDistance
+                    
+        # return result
 
     def input (self):
         if sp.driveManually == True:
@@ -53,6 +73,17 @@ class KeyboardPilot:
             self.rightKey = key == 'KEY_RIGHT'
             self.upKey = key == 'KEY_UP'
             self.downKey = key == 'KEY_DOWN'
+
+            if key == '\x1b': # Escape key
+                if self.samplefile.closed == False:
+                    self.samplefile.close()
+                    print('Saved')
+            elif key == 's':
+	            sp.world.visualisation.setLetter(key)
+            elif key == 'f':
+                sp.world.visualisation.setLetter(key)
+            elif key == 'h':
+                sp.world.visualisation.setLetter(key)
 
         self.targetVelocityStep = sp.world.control.targetVelocityStep
         self.steeringAngleStep = sp.world.control.steeringAngleStep
@@ -65,16 +96,21 @@ class KeyboardPilot:
         if sp.driveManually == True:
             if self.leftKey:
                 self.steeringAngleStep += 1
-                print ('Steering angle step: ', self.steeringAngleStep)
             elif self.rightKey:
                 self.steeringAngleStep -= 1
-                print ('Steering angle step: ', self.steeringAngleStep)
             elif self.upKey:
                 self.targetVelocityStep += 1
-                print ('Target velocity step: ', self.targetVelocityStep)
             elif self.downKey:
                 self.targetVelocityStep -= 1
-                print ('Target velocity step: ', self.targetVelocityStep)
+            
+            if self.samplefile.closed == False:
+                for (index, obstacleDistance) in enumerate(obstacleDistances):
+                    self.samplefile.write(f'{round(obstacleDistance, 4)},')
+
+                self.samplefile.write(f'{round(10 * self.steeringAngleStep, 4)}')
+                self.samplefile.write('\n')
+
+            self.row += 1
         
     def output (self):
         if sp.driveManually == True:

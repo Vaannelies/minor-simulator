@@ -26,6 +26,7 @@ Removing this header ends your license.
 '''
 
 import os
+import glob as gl
 import sys as ss
 
 ss.path.append (os.path.abspath ('../../..')) # If you want to store your simulations somewhere else, put SimPyLC in your PYTHONPATH environment variable
