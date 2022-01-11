@@ -37,7 +37,7 @@ class KeyboardPilot:
         self.steeringAngle = 0
         
         if not os.path.isdir('./data'): os.mkdir('./data')
-        self.samplefile = open('.\data\samples_2.dat', 'w')
+        self.samplefile = open('.\data\samples.dat', 'w')
 
         self.row = 0
         self.col = 0
@@ -74,7 +74,6 @@ class KeyboardPilot:
 
     def sweep (self):
         self.sonarDistances = sp.world.visualisation.lidar.sonarDistances
-        obstacleDistancesAmount = 3
         obstacleDistances = self.sonarDistances
 
         if sp.driveManually == True:
