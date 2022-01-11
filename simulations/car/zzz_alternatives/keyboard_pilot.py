@@ -59,7 +59,7 @@ class KeyboardPilot:
             if index%sectionSize  == 0:
                 if lidarDistance > result[round((index - index%sectionSize) / sectionSize)]:
                     result[round((index - index%sectionSize) / sectionSize)] = lidarDistance
-                    
+        print(result)
         return result
 
     def input (self):

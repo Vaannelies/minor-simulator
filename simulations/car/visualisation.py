@@ -41,6 +41,12 @@ import simpylc as sp
 
 import parameters as pm
 
+
+### HARDWARE IMPORTS #####
+import pyfirmata as pf
+import time as t
+##########################
+
 normalFloorColor = (0, 0.003, 0)
 collisionFloorColor = (1, 0, 0.3)
 nrOfObstacles = 64
@@ -66,6 +72,30 @@ class Lidar:
             if -self.halfApertureAngle <= relativeAngle < self.halfApertureAngle - 1:
                 self.distances [relativeAngle] = round (min (distance, self.distances [relativeAngle]), 4)    # In case of coincidence, favor nearby obstacle
 
+###################################################################################################################
+class Sonar:
+    # 0, ...,  halfApertureAngle - 1, -halfApertureAngle, ..., -1
+    
+    def __init__ (self, apertureAngle, obstacles):
+        self.apertureAngle = apertureAngle
+        self.halfApertureAngle = self.apertureAngle // 2
+        self.obstacles = obstacles
+        self.distances = [sp.finity for angle in range (self.apertureAngle)]
+        
+    def scan (self, mountPosition, mountAngle):
+        self.distances = [sp.finity for angle in range (self.apertureAngle)]
+        
+        for obstacle in self.obstacles:
+            relativePosition = sp.tSub (obstacle.center, mountPosition) 
+            distance = sp.tNor (relativePosition)
+            absoluteAngle = sp.atan2 (relativePosition [1], relativePosition [0])
+            relativeAngle = (round (absoluteAngle - mountAngle) + 180) % 360 - 180 
+                
+            if -self.halfApertureAngle <= relativeAngle < self.halfApertureAngle - 1:
+                self.distances [relativeAngle] = round (min (distance, self.distances [relativeAngle]), 4)    # In case of coincidence, favor nearby obstacle
+
+
+########################################################################################################################
 class Line (sp.Cylinder):
     def __init__ (self, **arguments):
        super () .__init__ (size = (0.01, 0.01, 0), axis = (1, 0, 0), angle = 90, color = (0, 1, 1), **arguments)
@@ -116,6 +146,8 @@ class Floor (sp.Beam):
 class Visualisation (sp.Scene):
     def __init__ (self):
         super () .__init__ ()
+
+        self.board = pf.Arduino('COM4')
         
         self.camera = sp.Camera ()
         
@@ -136,7 +168,7 @@ class Visualisation (sp.Scene):
 
         self.letter = 's'
         self.roadCones = []
-        track = open ('sonar.track')
+        track = open ('zero.track')
         
         for rowIndex, row in enumerate (track):
             for columnIndex, column in enumerate (row):
@@ -154,9 +186,61 @@ class Visualisation (sp.Scene):
                     
         track.close ()
         
-        self.lidar = Lidar (120, self.roadCones)
+        self.lidar = Lidar (30, self.roadCones)
+        # self.sonars = [Sonar (30, self.roadCones), Sonar(30, self.roadCones), Sonar(30, self.roadCones)]
         
     def display (self):
+
+        ######## START OF HARDWARE CODE #####
+        # it = pf.util.Iterator(self.board)
+        # it.start()
+        # self.board.analog[4].enable_reporting()
+        # while True:
+        #     print(self.board.analog[4].read())
+        #     t.sleep(2)
+
+        # start=0
+        # end=0
+
+        # trigpin = self.board.get_pin('d:8:o')
+        # echopin= self.board.get_pin('d:7:i')
+        # trigpin = self.board.digital[3]
+        # echopin= self.board.digital[2]
+
+        # trigpin.write(0)
+        # t.sleep(5)
+
+        # while True:
+        #     trigpin.write(1)
+        #     t.sleep(3)
+        #     trigpin.write(0)
+
+        #     # print(echopin.read())
+        #     while echopin.read() == None:
+        #         print('is 0')
+        #         break
+        #     start = t.time()
+        #     while echopin.read():
+        #         print('is 1')
+        #         break
+        #     end = t.time()
+
+        #     print((end - start)/58.0*1000000)
+        #     t.sleep(1)
+
+
+        # servopin = self.board.get_pin('d:2:s')
+        # while True:
+        self.board.digital.mode(2,'s')
+        if ((sp.world.physics.steeringAngle/60 * 1023) > 0) and ((sp.world.physics.steeringAngle/60 * 1023) < 1023):
+            self.board.digital[2].write( sp.world.physics.steeringAngle/60 * 1023)
+            t.sleep(1)
+            self.board.digital[2].write(0)
+            t.sleep(1)
+
+       
+        ######## END OF HARDWARE CODE #######
+
         if self.init:
             self.init = False
             sp.world.physics.positionX.set (self.startX) 

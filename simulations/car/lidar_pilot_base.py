@@ -79,8 +79,9 @@ class LidarPilotBase:
             if index%sectionSize  == 0:
                 if lidarDistance > result[round((index - index%sectionSize) / sectionSize)]:
                     result[round((index - index%sectionSize) / sectionSize)] = lidarDistance
-                    
-        return result       
+        print(result)
+        return result      
+
 
     def getHighestNeuralNetwork(self):
         scores = []
@@ -91,7 +92,7 @@ class LidarPilotBase:
             scores.append(tail.split('_')[2].split('.sav')[0])
 
         highestScore = max(scores)
-        highest_trained_network = r'.\data\trained_network_0.19.sav'
+        highest_trained_network = r'.\data\trained_network_0.15.sav'
         # highest_trained_network = r'.\data\trained_network_{}.sav'.format(highestScore)
 
         return highest_trained_network
@@ -120,13 +121,66 @@ class LidarPilotBase:
 
                 elif lidarDistance < self.nextObstacleDistance:
                     self.nextObstacleDistance = lidarDistance
-                    self.nextObstacleAngle = lidarAngle
-            
+                    self.nextObstacleAngle = lidarAngle           
+
             self.targetObstacleDistance = (self.nearestObstacleDistance + self.nextObstacleDistance) / 2
             self.targetObstacleAngle = (self.nearestObstacleAngle + self.nextObstacleAngle) / 2
 
+
+            
+            # self.nearestObstacleDistance = self.finity
+            # self.nearestObstacleAngle = 0
+            
+            # self.nextObstacleDistance = self.finity
+            # self.nextObstacleAngle = 0
+            # left = 0
+            # mid = 0
+            # right = 0
+
+            # for lidarAngle in range (-self.lidarHalfApertureAngle, self.lidarHalfApertureAngle):
+            #     lidarDistance = self.lidarDistances [lidarAngle]
+                
+            #     # if self.lidarDistances[0] > self.lidarDistances[1]:
+            #     #     mid += 1
+            #     #     right += 1
+            #     # else:
+            #     #     left += 1
+                
+            #     # if self.lidarDistances [1] > self.lidarDistances[2]:
+            #     #     right += 1
+            #     # else:
+
+            #     if self.lidarDistances[0] > self.lidarDistances[1]:
+            #         if self.lidarDistances[2] > self.lidarDistances [1]:
+            #             mid = 1
+            #         else:
+            #             right = 1
+            #     else:
+            #         if self.lidarDistances[2] > self.lidarDistances[0]
+            #             left = 1
+            #         else: 
+            #             left = 1
+
+            #     if lidarDistance < self.nearestObstacleDistance:
+            #         self.nextObstacleDistance =  self.nearestObstacleDistance
+            #         self.nextObstacleAngle = self.nearestObstacleAngle
+                    
+            #         self.nearestObstacleDistance = lidarDistance 
+            #         self.nearestObstacleAngle = lidarAngle
+
+            #     elif lidarDistance < self.nextObstacleDistance:
+            #         self.nextObstacleDistance = lidarDistance
+            #         self.nextObstacleAngle = lidarAngle           
+
+            # self.targetObstacleDistance = (self.nearestObstacleDistance + self.nextObstacleDistance) / 2
+            # self.targetObstacleAngle = (self.nearestObstacleAngle + self.nextObstacleAngle) / 2
+
+            # DRIVE USING THE PID CONTROLLER
             # self.steeringAngle = self.steeringPidController.getY (self.timer.deltaTime, self.targetObstacleAngle, 0)
+            
+            # DRIVE USING THE NEURAL NETWORK
             self.steeringAngle = trained_network_steeringAngle[0]
+
             self.targetVelocity = ((90 - abs (self.steeringAngle)) / 60) if self.driveEnabled else 0
 
             if self.samplefile.closed == False:

@@ -47,7 +47,7 @@ with open('.\data\samples_2.dat') as sampleFile:
 
 # Shuffle the dataset
 # https://scikit-learn.org/stable/modules/generated/sklearn.utils.shuffle.html
-# data = shuffle(df.to_numpy())
+data = shuffle(data)
 print('data', data)
 
 yColumn = [0 for item in data]      # output node values
