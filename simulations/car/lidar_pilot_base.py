@@ -96,7 +96,7 @@ class LidarPilotBase:
         return highest_trained_network
 
     def sweep (self):   # Control algorithm to be tested
-        obstacleDistancesAmount = 24
+        obstacleDistancesAmount = 3
         obstacleDistances = self.getObstacleDistances(obstacleDistancesAmount)
         trained_network_steeringAngle = self.trained_network.predict([obstacleDistances])
 
