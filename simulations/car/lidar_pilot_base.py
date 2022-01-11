@@ -48,7 +48,7 @@ class LidarPilotBase:
         self.steeringAngle = 0
         self.timer = tr.Timer ()
         if not os.path.isdir('.\data'): os.mkdir('.\data')
-        self.samplefile = open('.\data\samples_2.dat', 'w')
+        self.samplefile = open('.\data\samples.dat', 'w')
 
         self.row = 0
         self.col = 0
@@ -66,21 +66,7 @@ class LidarPilotBase:
 
     def input (self):   # Play nice in class hierarchy
         if sp.driveManually == False:
-            pass
-        
-    def getObstacleDistances(self, lidarDistanceSections):
-        # If len(self.lidarDistances) == 120, lidarDistanceSections should be something like 6, 12, 24 etc.
-
-        # create empty result array (filled with zeroes)
-        result = [0 for i in range(lidarDistanceSections)]
-        sectionSize = len(self.sonarDistances)/lidarDistanceSections
-
-        for (index, lidarDistance) in enumerate(self.sonarDistances):
-            if index%sectionSize  == 0:
-                if lidarDistance > result[round((index - index%sectionSize) / sectionSize)]:
-                    result[round((index - index%sectionSize) / sectionSize)] = lidarDistance
-                    
-        return result       
+            pass  
 
     def getHighestNeuralNetwork(self):
         scores = []
@@ -91,13 +77,12 @@ class LidarPilotBase:
             scores.append(tail.split('_')[2].split('.sav')[0])
 
         highestScore = max(scores)
-        highest_trained_network = r'.\data\trained_network_Jacques.sav'.format(highestScore)
+        highest_trained_network = r'.\data\trained_network_{}.sav'.format(highestScore)
 
         return highest_trained_network
 
     def sweep (self):   # Control algorithm to be tested
-        obstacleDistancesAmount = 3
-        obstacleDistances = self.getObstacleDistances(obstacleDistancesAmount)
+        obstacleDistances = self.sonarDistances
         trained_network_steeringAngle = self.trained_network.predict([obstacleDistances])
 
         if sp.driveManually == False:
