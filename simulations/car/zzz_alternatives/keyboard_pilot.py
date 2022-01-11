@@ -48,22 +48,6 @@ class KeyboardPilot:
             self.output ()
             tm.sleep (0.02)
             
-    def getObstacleDistances(self, lidarDistanceSections):
-        # If len(self.lidarDistances) == 120, lidarDistanceSections should be something like 6, 12, 24 etc.
-
-        # create empty result array (filled with zeroes)
-        result = [1e20 for i in range(lidarDistanceSections)]
-        sectionSize = int(len(self.sonarDistances)/lidarDistanceSections)
-        
-        # result = [0 for i in range(lidarDistanceSections)]
-        # sectionSize = len(self.lidarDistances)/lidarDistanceSections
-
-        # for (index, lidarDistance) in enumerate(self.lidarDistances):
-        #     if index%sectionSize  == 0:
-        #         if lidarDistance > result[round((index - index%sectionSize) / sectionSize)]:
-        #             result[round((index - index%sectionSize) / sectionSize)] = lidarDistance
-                    
-        # return result
 
     def input (self):
         if sp.driveManually == True:
@@ -91,7 +75,7 @@ class KeyboardPilot:
     def sweep (self):
         self.sonarDistances = sp.world.visualisation.lidar.sonarDistances
         obstacleDistancesAmount = 3
-        obstacleDistances = self.getObstacleDistances(obstacleDistancesAmount)
+        obstacleDistances = self.sonarDistances
 
         if sp.driveManually == True:
             if self.leftKey:
