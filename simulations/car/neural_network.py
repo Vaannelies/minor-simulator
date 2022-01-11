@@ -41,7 +41,7 @@ from sklearn.preprocessing import MinMaxScaler
 from sklearn.utils import shuffle
 
 
-with open('.\data\samples_2.dat') as sampleFile:
+with open('.\data\samples.dat') as sampleFile:
     data = np.array([[float (word) for word in line.split(',')] for line in sampleFile.readlines()])
 
 
