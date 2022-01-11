@@ -38,6 +38,16 @@ class KeyboardPilot:
             self.output ()
             tm.sleep (0.02)
             
+<<<<<<< Updated upstream
+=======
+    def getObstacleDistances(self, lidarDistanceSections):
+        # If len(self.lidarDistances) == 120, lidarDistanceSections should be something like 6, 12, 24 etc.
+
+        # create empty result array (filled with zeroes)
+        result = [1e20 for i in range(lidarDistanceSections)]
+        sectionSize = int(len(self.sonarDistances)/lidarDistanceSections)
+
+>>>>>>> Stashed changes
     def input (self):
         if sp.driveManually == True:
             key = sp.getKey ()
@@ -51,6 +61,13 @@ class KeyboardPilot:
         self.steeringAngleStep = sp.world.control.steeringAngleStep
 
     def sweep (self):
+<<<<<<< Updated upstream
+=======
+        self.sonarDistances = sp.world.visualisation.lidar.sonarDistances
+        obstacleDistancesAmount = 3
+        obstacleDistances = self.getObstacleDistances(obstacleDistancesAmount)
+
+>>>>>>> Stashed changes
         if sp.driveManually == True:
             if self.leftKey:
                 self.steeringAngleStep += 1

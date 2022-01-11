@@ -45,17 +45,19 @@ normalFloorColor = (0, 0.003, 0)
 collisionFloorColor = (1, 0, 0.3)
 nrOfObstacles = 64
 
-class Lidar:
-    # 0, ...,  halfApertureAngle - 1, -halfApertureAngle, ..., -1
+class Scanner:
     
-    def __init__ (self, apertureAngle, obstacles):
+    def __init__ (self, apertureAngle, middleApertureAngle, obstacles):
         self.apertureAngle = apertureAngle
         self.halfApertureAngle = self.apertureAngle // 2
+        self.middleApertureAngle = middleApertureAngle
+        self.halfMiddleApertureAngle = self.middleApertureAngle // 2
         self.obstacles = obstacles
-        self.distances = [sp.finity for angle in range (self.apertureAngle)]
-        
+        self.lidarDistances = [sp.finity for angle in range (self.apertureAngle)]
+        self.sonarDistances = [sp.finity for angle in range (3)]
+
     def scan (self, mountPosition, mountAngle):
-        self.distances = [sp.finity for angle in range (self.apertureAngle)]
+        self.lidarDistances = [sp.finity for angle in range (self.apertureAngle)]
         
         for obstacle in self.obstacles:
             relativePosition = sp.tSub (obstacle.center, mountPosition) 
@@ -64,7 +66,16 @@ class Lidar:
             relativeAngle = (round (absoluteAngle - mountAngle) + 180) % 360 - 180 
                 
             if -self.halfApertureAngle <= relativeAngle < self.halfApertureAngle - 1:
-                self.distances [relativeAngle] = round (min (distance, self.distances [relativeAngle]), 4)    # In case of coincidence, favor nearby obstacle
+                self.lidarDistances [relativeAngle] = round (min (distance, self.lidarDistances [relativeAngle]), 4)    # In case of coincidence, favor nearby obstacle
+
+                if relativeAngle < -self.halfMiddleApertureAngle:
+                    sectorIndex = -1
+                elif relativeAngle < self.halfMiddleApertureAngle:
+                    sectorIndex = 0
+                else:
+                    sectorIndex = 1
+
+                self.sonarDistances [sectorIndex] = round (min (distance, self.sonarDistances [sectorIndex]), 4)
 
 class Line (sp.Cylinder):
     def __init__ (self, **arguments):
@@ -153,7 +164,8 @@ class Visualisation (sp.Scene):
                     
         track.close ()
         
-        self.lidar = Lidar (120, self.roadCones)
+        self.lidar = Scanner (160, 45, self.roadCones)
+        print (self.lidar)
         
     def display (self):
         if self.init:
@@ -216,4 +228,10 @@ class Visualisation (sp.Scene):
         except Exception as exception: # Initial check
             pass
             # print ('Visualisation.display:', exception)
+<<<<<<< Updated upstream
         
+=======
+
+    def setLetter(self, letter):
+        self.letter = letter
+>>>>>>> Stashed changes

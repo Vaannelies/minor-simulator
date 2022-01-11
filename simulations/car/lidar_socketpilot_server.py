@@ -48,7 +48,7 @@ class LidarSocketpilotServer:
                 with self.clientSocket:
                     while True:
                         sensors = {
-                            'lidarDistances': sp.world.visualisation.lidar.distances,
+                            'lidarDistances': sp.world.visualisation.lidar.sonarDistances,
                             'lidarHalfApertureAngle': sp.world.visualisation.lidar.halfApertureAngle
                         }
                         self.send (sensors)

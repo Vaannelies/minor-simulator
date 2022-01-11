@@ -50,7 +50,7 @@ class LidarPilot:
         elif key == 'KEY_DOWN':
             self.driveEnabled = False
         
-        self.lidarDistances = sp.world.visualisation.lidar.distances
+        self.sonarDistances = sp.world.visualisation.lidar.sonarDistances
         self.lidarHalfApertureAngle = sp.world.visualisation.lidar.halfApertureAngle
         
     def sweep (self):   # Control algorithm to be tested
@@ -61,7 +61,7 @@ class LidarPilot:
         self.nextObstacleAngle = 0
 
         for lidarAngle in range (-self.lidarHalfApertureAngle, self.lidarHalfApertureAngle):
-            lidarDistance = self.lidarDistances [lidarAngle]
+            lidarDistance = self.sonarDistances [lidarAngle]
             
             if lidarDistance < self.nearestObstacleDistance:
                 self.nextObstacleDistance =  self.nearestObstacleDistance

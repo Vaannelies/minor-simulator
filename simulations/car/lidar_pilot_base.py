@@ -37,6 +37,11 @@ class LidarPilotBase:
         self.driveEnabled = False
         self.steeringAngle = 0
         self.timer = tr.Timer ()
+<<<<<<< Updated upstream
+=======
+        if not os.path.isdir('.\data'): os.mkdir('.\data')
+        self.samplefile = open('.\data\samples_0.04.dat', 'w')
+>>>>>>> Stashed changes
 
 
         # pc = pid_controller.py . PidController is the classname.
@@ -59,6 +64,38 @@ class LidarPilotBase:
         if sp.driveManually == False:
             pass
         
+<<<<<<< Updated upstream
+=======
+    def getObstacleDistances(self, lidarDistanceSections):
+        # If len(self.lidarDistances) == 120, lidarDistanceSections should be something like 6, 12, 24 etc.
+
+        # create empty result array (filled with zeroes)
+        result = [1e20 for i in range(lidarDistanceSections)]
+        sectionSize = len(self.sonarDistances)/lidarDistanceSections
+
+        for (index, lidarDistance) in enumerate(self.sonarDistances):
+            if index%sectionSize  == 0:
+                if lidarDistance > result[round((index - index%sectionSize) / sectionSize)]:
+                    result[round((index - index%sectionSize) / sectionSize)] = lidarDistance
+        print (result, self.sonarDistances)
+                    
+        return result       
+
+    def getHighestNeuralNetwork(self):
+        scores = []
+        files = gl.glob(r'.\data\trained_network_0.*')
+
+        for file in files:
+            head, tail = os.path.split(file)
+            scores.append(tail.split('_')[2].split('.sav')[0])
+
+        highestScore = max(scores)
+        highest_trained_network = r'.\data\trained_network_0.97.sav'
+        # highest_trained_network = r'.\data\trained_network_{}.sav'.format(highestScore)
+
+        return highest_trained_network
+
+>>>>>>> Stashed changes
     def sweep (self):   # Control algorithm to be tested
         if sp.driveManually == False:
             self.nearestObstacleDistance = self.finity
@@ -67,8 +104,8 @@ class LidarPilotBase:
             self.nextObstacleDistance = self.finity
             self.nextObstacleAngle = 0
 
-            for lidarAngle in range (-self.lidarHalfApertureAngle, self.lidarHalfApertureAngle):
-                lidarDistance = self.lidarDistances [lidarAngle]
+            for lidarAngle in range (3):
+                lidarDistance = self.sonarDistances [lidarAngle]
                 
                 if lidarDistance < self.nearestObstacleDistance:
                     self.nextObstacleDistance =  self.nearestObstacleDistance

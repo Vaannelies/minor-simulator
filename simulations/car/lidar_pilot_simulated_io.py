@@ -43,7 +43,7 @@ class LidarPilotSimulatedIo (lb.LidarPilotBase):
             elif key == 'KEY_DOWN':
                 self.driveEnabled = False
                 
-        self.lidarDistances = sp.world.visualisation.lidar.distances
+        self.sonarDistances = sp.world.visualisation.lidar.sonarDistances
         self.lidarHalfApertureAngle = sp.world.visualisation.lidar.halfApertureAngle
         
     def output (self):  # Output to simulator
