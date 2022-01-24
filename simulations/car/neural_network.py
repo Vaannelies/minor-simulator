@@ -61,7 +61,7 @@ for index, row in enumerate(data):
     items = []
     for index, column in enumerate(row):
         if index < len(row)-1:
-            if column > 10000000:
+            if column > 20:
                 column = 20
             items.append(column)
     xColumns[len(xColumns)-1] = items
